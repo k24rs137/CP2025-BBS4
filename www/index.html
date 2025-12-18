@@ -178,7 +178,9 @@ function createPostElement(post) {
     return `
         <div class="post" id="post-${post.id}">
             <div class="post-header">
-                <span class="post-author">${escapeHtml(post.author)}</span>
+                <span class="post-author">
+                ${escapeHtml(post.authorDisplayName||'名無し')}
+                </span>
                 <!-- 編集権限があれば、編集・削除機能を表示 -->
                 ${actions}
             </div>
