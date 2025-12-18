@@ -417,18 +417,17 @@ function register(email, password) {
     }
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then((result) => {
-       return result.user.updateProfile({
-           displayName:nickname
-       });
-    })
-    .then(() => {
+    .then(async(result) => {
+        await result.user.updateProfile({
+            displayName: nickname
+        });
+        await result.user.reload();
         showMessage('アカウントを作成しました');
         clearAuthForm();
     })
-    .catch((error) => {
-        showMessage(getAuthErrorMessage(error), 'error');
-    });
+        .catch((error) => {
+            showMessage(getAuthErrorMessage(error), 'error');
+        });
 }
 
 // ログアウト処理
@@ -453,7 +452,7 @@ function updateUI(user) {
     if (user) {
         $('.logged-in').show();
         $('.logged-out').hide();
-        $('#userEmail').text(user.displayName);
+        $('#userEmail').text(user.displayName||user.email);
     } else {
         $('.logged-in').hide();
         $('.logged-out').show();
@@ -473,11 +472,16 @@ $(function() {
     }
 
     // 認証状態の監視
-    firebase.auth().onAuthStateChanged((user) => {
-        currentUser = user;
-        updateUI(user);
+    firebase.auth().onAuthStateChanged(async(user) => {
+        if (user) {
+            await user.reload();
+            currentUser = firebase.auth().currentUser;
+        } else {
+        currentUser = null;
+        }
+        updateUI(currentUser);
         loadPosts();
-     });
+    });
 
     // 文字数カウンターの初期化
     updateCharacterCount('contentInput', 'contentCount', 1000);
