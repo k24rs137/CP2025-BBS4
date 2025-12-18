@@ -408,19 +408,24 @@ function login(email, password) {
 function register(email, password) {
     if (!validateAuthInput(email, password, true)) return;
 
-    const button = $('#registerButton');
-    button.prop('disabled', true);
+    const nickname = $('#nickname').val().trim();
+    if(!nickname){
+        showMessage('ニックネームを入力してください','error');
+        return;
+    }
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then((result) => {
+       return result.user.updateProfile({
+           displayName:nickname
+       });
+    })
     .then(() => {
         showMessage('アカウントを作成しました');
         clearAuthForm();
     })
     .catch((error) => {
         showMessage(getAuthErrorMessage(error), 'error');
-    })
-    .finally(() => {
-        button.prop('disabled', false);
     });
 }
 
