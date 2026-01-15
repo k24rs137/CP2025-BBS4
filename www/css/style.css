@@ -519,3 +519,19 @@ textarea.form-control {
     background: #fd6794;
     font-weight: bold;
 }
+
+.btn-bad {
+    background: #eee;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 6px;
+}
+
+.btn-bad.baded {
+    background: #144c7c;
+    color: white;
+    font-weight: bold;
+}
+

@@ -176,6 +176,8 @@ function createPostElement(post) {
 
     const likeCount = post.likes ? Object.keys(post.likes).length : 0;
     const isLiked = currentUser && post.likes && post.likes[currentUser.uid];
+    const badCount = post.bads ? Object.keys(post.bads).length : 0;
+    const isBaded = currentUser && post.bads && post.bads[currentUser.uid];
 
     return `
         <div class="post" id="post-${post.id}">
@@ -194,6 +196,10 @@ function createPostElement(post) {
                 <button class="btn-like ${isLiked ? 'liked' : ''}"
                         onclick="toggleLike('${post.id}')">
                     good ${likeCount}
+                </button>
+                <button class="btn-bad ${isBaded ? 'baded' : ''}"
+                        onclick="toggleBad('${post.id}')">
+                    bad ${badCount}
                 </button>
 
                 <span class="post-time">
@@ -371,10 +377,10 @@ function deletePost(postId) {
     currentEditId = postId;
     showModal('deleteModal');
 }
-// ぐっとのON/OFF
+// goodのON/OFF
 function toggleLike(postId) {
     if (!currentUser) {
-        showMessage('goodするにはログインが必要だよ', 'error');
+        showMessage('goodするにはログインが必要です', 'error');
         return;
     }
 
@@ -385,9 +391,29 @@ function toggleLike(postId) {
 
     likeRef.once('value').then(snapshot => {
         if (snapshot.exists()) {
-            likeRef.remove();   // 解除
+            likeRef.remove();
         } else {
             likeRef.set(true); 
+        }
+    });
+}
+// badのON/OFF
+function toggleBad(postId) {
+    if (!currentUser) {
+        showMessage('badするにはログインが必要です', 'error');
+        return;
+    }
+
+    const badRef = postsRef
+        .child(postId)
+        .child('bads')
+        .child(currentUser.uid);
+
+    badRef.once('value').then(snapshot => {
+        if (snapshot.exists()) {
+            badRef.remove();
+        } else {
+            badRef.set(true);
         }
     });
 }
