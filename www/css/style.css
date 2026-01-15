@@ -1,7 +1,7 @@
 /* css/style.css */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background-color: #f8f9fa;
+    background-color: #c4e2ff;
     color: #333;
     line-height: 1.6;
 }
@@ -506,4 +506,16 @@ textarea.form-control {
 
 .logged-out {
     display: none;
+}
+.btn-like {
+    background: #eee;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-like.liked {
+    background: #fd6794;
+    font-weight: bold;
 }
