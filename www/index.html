@@ -225,7 +225,9 @@ function renderPosts(posts) {
         postsDiv.append(createPostElement(post));
     });
 }
-
+function getLikeCount(post){
+    return post.likes ? Object.keys(post.likes).length:0;
+}
 // 投稿の読み込み
 function loadPosts() {
     const sortOrder = $('#sortOrder').val();
@@ -250,8 +252,18 @@ function loadPosts() {
         // 並び順の適用
         if (sortOrder === 'newest') {
             posts.sort((a, b) => b.timestamp - a.timestamp);
-        } else {
+        } else if(sortOrder==='oldest'){
             posts.sort((a, b) => a.timestamp - b.timestamp);
+        } else if(sortOrder==='popular'){
+            posts.sort((a, b) =>{
+                const likeA=getLikeCount(a);
+                const likeB=getLikeCount(b);
+
+                if(likeA===likeB){
+                    return b.timestamp-a.timestamp;
+                }
+                return likeB-likeA;
+            });
         }
 
         renderPosts(posts);
@@ -623,6 +635,7 @@ window.addEventListener('unload', () => {
                 <select id="sortOrder" class="form-control">
                     <option value="newest">新しい順</option>
                     <option value="oldest">古い順</option>
+                    <option value="popular">人気順</option>
                 </select>
             </div>
             <div id="postsList"></div>
